@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * Implement hook_form_alter().
+ */
+function example_form_alter(&$form, &$form_state, $form_id) {
+  if($form_id == 'entityform_type_form') {
+    $form['#submit'][] = 'add_new_fields';
+  }
+}
+
+/**
+ * Submit callback adding custom field when saved entityform type.
+ */
+function add_new_fields($form, &$form_state) {
+  // Create email address field.
+  if(!field_info_field('field_email_address')) {
+    // Create your new field.
+    $field = array(
+      'field_name' => 'field_email_address',
+      'type' => 'text',
+    );
+
+    field_create_field($field);
+
+    // Create field instance.
+    $instance = array(
+      'field_name' => 'field_email_address',
+      'entity_type' => 'entityform',
+      'bundle' => $form_state['values']['type'],
+      'label' => 'Email address',
+      'settings' => array(
+        'entityform_type_form' => 1,
+      ),
+      'widget' => array(
+        'type' => 'textfield',
+      ),
+    );
+
+    field_create_instance($instance);
+  }
+   // Create voucher code field.
+  if(!field_info_field('field_voucher_code')) {
+    // Create your new field.
+    $field = array(
+      'field_name' => 'field_voucher_code',
+      'type' => 'text',
+    );
+
+    field_create_field($field);
+
+    // Create field instance.
+    $instance = array(
+      'field_name' => 'field_voucher_code',
+      'entity_type' => 'entityform',
+      'bundle' => $form_state['values']['type'],
+      'label' => 'Voucher code',
+      'settings' => array(
+        'entityform_type_form' => 1,
+      ),
+      'widget' => array(
+        'type' => 'textfield',
+      ),
+    );
+
+    field_create_instance($instance);
+  }
+}
